@@ -14,11 +14,15 @@ namespace MyLeasing.Web.Controllers
     {
         private readonly IOwnerRepository _ownerRepository;
         private readonly IUserHelper _userHelper;
+        private readonly IImageHelper _imageHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public OwnersController(IOwnerRepository ownerRepository, IUserHelper userHelper)
+        public OwnersController(IOwnerRepository ownerRepository, IUserHelper userHelper, IImageHelper imageHelper, IConverterHelper converterHelper)
         {
             _ownerRepository = ownerRepository;
             _userHelper = userHelper;
+            _imageHelper = imageHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Owners
@@ -64,21 +68,10 @@ namespace MyLeasing.Web.Controllers
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    var guid = Guid.NewGuid().ToString();
-                    var file = $"{guid}.jpg";
-
-
-                    path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\owners", file);
-
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await model.ImageFile.CopyToAsync(stream);
-                    }
-
-                    path = $"~/images/owners/{file}";
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "Owners");
                 }
 
-                var owner = this.ToOwner(model, path);
+                var owner = _converterHelper.TOOwner(model, path, true);
 
                 //TODO: Modificar para o user que tiver logado
                 owner.User = await _userHelper.GetUserByEmailAsync("santos.filipe.m@hotmail.com");
@@ -118,7 +111,7 @@ namespace MyLeasing.Web.Controllers
                 return NotFound();
             }
 
-            var model = this.ToOwnerViewModel(owner);
+            var model = _converterHelper.ToOwnerViewModel(owner);
             return View(model);
         }
 
@@ -154,20 +147,10 @@ namespace MyLeasing.Web.Controllers
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        var guid = Guid.NewGuid().ToString();
-                        var file = $"{guid}.jpg";
-
-                        path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\owners", file);
-
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await model.ImageFile.CopyToAsync(stream);
-                        }
-
-                        path = $"~/images/owners/{file}";
+                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "Owners");
                     }
 
-                    var owner = this.ToOwner(model, path);
+                    var owner = _converterHelper.TOOwner(model, path, false);
 
                     //TODO: Modificar para o user que tiver logado
                     owner.User = await _userHelper.GetUserByEmailAsync("santos.filipe.m@hotmail.com");
