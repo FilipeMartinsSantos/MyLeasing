@@ -71,7 +71,7 @@ namespace MyLeasing.Web.Controllers
                     path = await _imageHelper.UploadImageAsync(model.ImageFile, "Owners");
                 }
 
-                var owner = _converterHelper.TOOwner(model, path, true);
+                var owner = _converterHelper.ToOwner(model, path, true);
 
                 //TODO: Modificar para o user que tiver logado
                 owner.User = await _userHelper.GetUserByEmailAsync("santos.filipe.m@hotmail.com");
@@ -81,7 +81,7 @@ namespace MyLeasing.Web.Controllers
             return View(model);
         }
 
-        private Owner ToOwner(OwnerViewModel model, string path)
+        /*private Owner ToOwner(OwnerViewModel model, string path)
         {
             return new Owner
             {
@@ -95,7 +95,7 @@ namespace MyLeasing.Web.Controllers
                 User = model.User,
                 Document = model.Document,
             };
-        }
+        }*/
 
         // GET: Owners/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -115,7 +115,7 @@ namespace MyLeasing.Web.Controllers
             return View(model);
         }
 
-        private OwnerViewModel ToOwnerViewModel(Owner owner)
+        /*private OwnerViewModel ToOwnerViewModel(Owner owner)
         {
             return new OwnerViewModel
             {
@@ -129,7 +129,7 @@ namespace MyLeasing.Web.Controllers
                 User = owner.User,
                 Document = owner.Document,
             };
-        }
+        }*/
 
         // POST: Owners/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -150,7 +150,7 @@ namespace MyLeasing.Web.Controllers
                         path = await _imageHelper.UploadImageAsync(model.ImageFile, "Owners");
                     }
 
-                    var owner = _converterHelper.TOOwner(model, path, false);
+                    var owner = _converterHelper.ToOwner(model, path, false);
 
                     //TODO: Modificar para o user que tiver logado
                     owner.User = await _userHelper.GetUserByEmailAsync("santos.filipe.m@hotmail.com");

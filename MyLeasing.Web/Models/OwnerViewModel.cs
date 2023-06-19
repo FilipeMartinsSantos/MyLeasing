@@ -6,7 +6,7 @@ namespace MyLeasing.Web.Models
 {
     public class OwnerViewModel: Owner
     {
-        [Display(Name = "name")]    
+        [Display(Name = "Image")]    
         public IFormFile ImageFile { get; set; }
     }
 }

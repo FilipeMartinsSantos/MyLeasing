@@ -6,7 +6,7 @@ namespace MyLeasing.Web.Helpers
 {
     public class ConverterHelper : IConverterHelper
     {
-        public Owner TOOwner(OwnerViewModel model, string path, bool isNew)
+        public Owner ToOwner(OwnerViewModel model, string path, bool isNew)
         {
             return new Owner
             {

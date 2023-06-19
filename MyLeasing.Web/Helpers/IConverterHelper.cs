@@ -5,7 +5,7 @@ namespace MyLeasing.Web.Helpers
 {
     public interface IConverterHelper
     {
-        Owner TOOwner(OwnerViewModel model, string path, bool isNew);
+        Owner ToOwner(OwnerViewModel model, string path, bool isNew);
 
         OwnerViewModel ToOwnerViewModel(Owner owner);
     }
