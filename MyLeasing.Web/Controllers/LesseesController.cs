@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyLeasing.Web.Data;
 using MyLeasing.Web.Data.Entities;
-using MyLeasing.Web.Models;
 
 namespace MyLeasing.Web.Controllers
 {
@@ -54,50 +51,15 @@ namespace MyLeasing.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(LesseeViewModel lesseeViewModel)
+        public async Task<IActionResult> Create(Lessee lessee)
         {
             if (ModelState.IsValid)
             {
-                var path = string.Empty;
-
-                if (lesseeViewModel.ImageFile != null && lesseeViewModel.ImageFile.Length > 0)
-                {
-                    var guid = Guid.NewGuid().ToString();
-                    var file = $"{guid}.jpg";
-
-                    path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\lessees", file);
-
-                    using(var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await lesseeViewModel.ImageFile.CopyToAsync(stream);
-                    }
-
-                    path = $"~/images/lessees/{file}";
-                }
-
-                var lessee = this.ToLessee(lesseeViewModel, path);
-
-                    _context.Add(lessee);
+                _context.Add(lessee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(lesseeViewModel);
-        }
-
-        private Lessee ToLessee(LesseeViewModel lesseeViewModel, string path)
-        {
-            return new Lessee
-            {
-                Id = lesseeViewModel.Id,
-                FirstName = lesseeViewModel.FirstName,
-                LastName = lesseeViewModel.LastName,
-                FixedPhone = lesseeViewModel.FixedPhone,
-                CellPhone = lesseeViewModel.CellPhone,
-                Address = lesseeViewModel.Address,
-                Photo = path,
-                User = lesseeViewModel.User,
-                Document = lesseeViewModel.Document,
-            };
+            return View(lessee);
         }
 
         // GET: Lessees/Edit/5
@@ -113,25 +75,7 @@ namespace MyLeasing.Web.Controllers
             {
                 return NotFound();
             }
-
-            var lesseeViewModel = this.ToLesseeViewModel(lessee);
-            return View(lesseeViewModel);
-        }
-
-        private LesseeViewModel ToLesseeViewModel(Lessee lessee)
-        {
-            return new LesseeViewModel
-            {
-                Id = lessee.Id,
-                FirstName = lessee.FirstName,
-                LastName = lessee.LastName,
-                FixedPhone = lessee.FixedPhone,
-                CellPhone = lessee.CellPhone,
-                Address = lessee.Address,
-                Photo = lessee.Photo,
-                User = lessee.User,
-                Document = lessee.Document,
-            };
+            return View(lessee);
         }
 
         // POST: Lessees/Edit/5
@@ -139,37 +83,23 @@ namespace MyLeasing.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(LesseeViewModel lesseeViewModel)
+        public async Task<IActionResult> Edit(int id, Lessee lessee)
         {
+            if (id != lessee.Id)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var path = lesseeViewModel.Photo;
-
-                    if(lesseeViewModel.ImageFile != null && lesseeViewModel.ImageFile.Length > 0)
-                    {
-                        var guid = Guid.NewGuid().ToString();
-                        var file = $"{guid}.jpg";
-
-                        path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\lessees", file);
-
-                        using(var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await lesseeViewModel.ImageFile.CopyToAsync(stream);    
-                        }
-
-                        path = $"~/images/lessees/{file}";
-                    }
-
-                    var lessee = this.ToLessee(lesseeViewModel, path); 
-
                     _context.Update(lessee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LesseeExists(lesseeViewModel.Id))
+                    if (!LesseeExists(lessee.Id))
                     {
                         return NotFound();
                     }
@@ -180,7 +110,7 @@ namespace MyLeasing.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(lesseeViewModel);
+            return View(lessee);
         }
 
         // GET: Lessees/Delete/5

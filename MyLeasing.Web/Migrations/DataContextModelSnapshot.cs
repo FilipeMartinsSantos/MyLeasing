@@ -182,12 +182,7 @@ namespace MyLeasing.Web.Migrations
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Lessees");
                 });
@@ -367,15 +362,6 @@ namespace MyLeasing.Web.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MyLeasing.Web.Data.Entities.Lessee", b =>
-                {
-                    b.HasOne("MyLeasing.Web.Data.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyLeasing.Web.Data.Entities.Owner", b =>
