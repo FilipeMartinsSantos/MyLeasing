@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using MyLeasing.Web.Data.Entities;
@@ -58,6 +59,30 @@ namespace MyLeasing.Web.Data
                 AddOwner("Pedro", "Costa", "244765432", "912345678", "Rua dos Costas", user);
                 await _context.SaveChangesAsync();
             }
+
+            if (!_context.Lessees.Any())
+            {
+                AddLessee("Luana", "Costa", "230654001", "910466789", "Rua dos Costas", user);
+                AddLessee("Fernando", "Vieitas", "226527410", "934568530", "Rua dos Vieitas", user);
+                AddLessee("Viviane", "Santos", "244432109", "933678901", "Rua dos Santos", user);
+                AddLessee("Ricardo", "Garcia", "211321098", "916876012", "Rua dos Garcias", user);
+                AddLessee("Mafalda", "Castro", "213211687", "917430123", "Rua dos Castros", user);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private void AddLessee(string firstname, string lastname, string fixedPhone, string cellPhone, string address, User user)
+        {
+            _context.Lessees.Add(new Lessee
+            {
+                Document = _random.Next(10000),
+                FirstName = firstname,
+                LastName = lastname,
+                FixedPhone = fixedPhone,
+                CellPhone = cellPhone,
+                Address = address,
+                User = user 
+            });
         }
 
         private void AddOwner(string firstname, string lastname, string fixedPhone, string cellPhone, string address, User user)

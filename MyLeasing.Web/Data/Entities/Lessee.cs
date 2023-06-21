@@ -36,5 +36,7 @@ namespace MyLeasing.Web.Data.Entities
         public string FullName { get { return $"{FirstName} {LastName}"; } }
 
         public string FullNameWithDocument { get { return $"{FirstName} {LastName} {Document}"; } }
+
+        public User User { get; set; }
     }
 }
